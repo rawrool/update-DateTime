@@ -1,4 +1,5 @@
-from datetime import datetime, timezone
+import calendar
+from datetime import datetime, timezone, timedelta
 from urllib.error import URLError
 from urllib.request import urlopen
 
@@ -37,11 +38,14 @@ def get_sites_date(website):
 
 
 def convert_gmt_to_local(site_gmt):
-    return site_gmt.replace(tzinfo=timezone.utc).astimezone(tz=None)
+    unix_timestamp = calendar.timegm(site_gmt.timetuple())
+    local_datetime = datetime.fromtimestamp(unix_timestamp)
+    assert site_gmt.resolution >= timedelta(microseconds=1)
+    return local_datetime.replace(microsecond=site_gmt.microsecond)
 
 
-site = WebSite('http://just-the-time.appspot.com/')
+site = WebSite('https://google.com/')
 site_datetime = get_sites_date(site)
-local_datetime = convert_gmt_to_local(site_datetime)
-print(local_datetime)
+converted_datetime = convert_gmt_to_local(site_datetime)
+print(converted_datetime)
 
