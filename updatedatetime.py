@@ -1,4 +1,5 @@
 import calendar
+import os
 from datetime import datetime, timezone, timedelta
 from urllib.error import URLError
 from urllib.request import urlopen
@@ -44,8 +45,16 @@ def convert_gmt_to_local(site_gmt):
     return local_datetime.replace(microsecond=site_gmt.microsecond)
 
 
+def change_system_time(converted_date):
+    date_format = str(converted_date.strftime("%m")) + "-" + str(converted_date.strftime("%d")) + "-" + \
+                  str(converted_date.strftime("%y"))
+    time_format = str(converted_datetime.strftime("%X"))
+    os.system("date " + date_format)
+    os.system("time " + time_format)
+
+
 site = WebSite('https://google.com/')
 site_datetime = get_sites_date(site)
 converted_datetime = convert_gmt_to_local(site_datetime)
-print(converted_datetime)
+change_system_time(converted_datetime)
 
